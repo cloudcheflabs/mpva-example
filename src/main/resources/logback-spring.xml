@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <configuration>
-	<!-- log home -->
-	<property scope="context" name="log_home" value="/app/logs" />
+	<property scope="context" name="LOG_DIR" value="/tmp/logs" />
+    <property scope="context" name="LOG_FILE_NAME" value="sample" />
 
     <!-- console appender -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -13,24 +13,17 @@
     
     <!-- file appender -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${log_home}/sample.log</file>
+		<file>${LOG_DIR}/${LOG_FILE_NAME}.log</file>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %5level %logger - %msg%n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${log_home}/sample.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${LOG_DIR}/${LOG_FILE_NAME}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <maxFileSize>1MB</maxFileSize>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
     </appender>
 
-    <!-- 어플리케이션 로그 설정 -->
-    <!--<logger name="com.donga" level="DEBUG">
-		<appender-ref ref="CONSOLE"/>
-		<appender-ref ref="FILE"/>
-	</logger>-->
-    
-    <!-- 루트 로그 설정 -->
     <root level="INFO">
         <appender-ref ref="CONSOLE" />
         <!--<appender-ref ref="FILE" />-->
