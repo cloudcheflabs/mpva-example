@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<configuration>
+	<!-- log home -->
+	<property scope="context" name="log_home" value="/app/logs" />
+
+    <!-- console appender -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%green(%d{yyyy-MM-dd HH:mm:ss.SSS}) %magenta([%thread]) %highlight(%5level) %cyan(%logger) - %yellow(%msg%n)</pattern>
+        </encoder>
+    </appender>
+    
+    <!-- file appender -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${log_home}/sample.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %5level %logger - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${log_home}/sample.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>1MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!-- 어플리케이션 로그 설정 -->
+    <!--<logger name="com.donga" level="DEBUG">
+		<appender-ref ref="CONSOLE"/>
+		<appender-ref ref="FILE"/>
+	</logger>-->
+    
+    <!-- 루트 로그 설정 -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+        <!--<appender-ref ref="FILE" />-->
+    </root>
+</configuration>

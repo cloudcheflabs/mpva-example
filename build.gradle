@@ -1,0 +1,52 @@
+plugins {
+    id 'org.sonarqube' version '3.5.0.2730'
+    id 'io.spring.dependency-management' version '1.1.0'
+    id 'java'
+}
+
+group = 'mykidong.mpva'
+version = '1.0.0'
+sourceCompatibility = '17'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url "https://maven.egovframe.go.kr/maven/" } // egovframe maven 원격 저장소
+}
+
+ext {
+    set('egovframeBootVersion', '4.3.0')
+    set('log4j2.version', '2.23.1') // log4j 보안 패치
+}
+
+dependencies {
+    implementation 'org.egovframe.cloud:module-common:4.3.0'
+    implementation('org.egovframe.rte:org.egovframe.rte.fdl.cmmn:4.3.0') {
+        exclude group: 'org.egovframe.rte', module: 'org.egovframe.rte.fdl.logging'
+    }
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.egovframe.boot:org.egovframe.boot.starter.parent:${egovframeBootVersion}" // egovframe Boot Parent 설정
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
