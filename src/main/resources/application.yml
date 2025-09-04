@@ -30,10 +30,13 @@ spring:
   jpa:
     open-in-view: false
 
+
 ---
 #####################
 # profile: dev
 #####################
+
+# spring
 spring:
   profiles: dev
   datasource:
@@ -46,11 +49,22 @@ spring:
       enabled: true
 
 
+# swagger
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+
 
 ---
 #####################
 # profile: prod
 #####################
+
+# spring
 spring:
   profiles: prod
   datasource:
@@ -61,3 +75,11 @@ spring:
   h2:
     console:
       enabled: true
+
+
+# swagger
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false

@@ -3,30 +3,45 @@ package mykidong.mpva.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mykidong.mpva.dto.FakeUserDto;
+import mykidong.mpva.domain.dto.FakeUserDto;
+import mykidong.mpva.domain.entity.FakeUser;
+import mykidong.mpva.domain.mapper.FakeUserMapper;
+import mykidong.mpva.repository.FakeUserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class FakeService {
 
-    public List<FakeUserDto> getUsers() {
-        List<FakeUserDto> fakeUsers = new ArrayList<>();
-        for(int i = 0; i < 5; i++) {
-            FakeUserDto fakeUserDto = new FakeUserDto();
-            fakeUserDto.setId(i + 1);
-            fakeUserDto.setName("fake name " + i);
-            fakeUserDto.setEmail("fakeuser" + i + "@fake.com");
-            fakeUserDto.setPhone("010-1234-123" + i);
+    @Autowired
+    private FakeUserRepository fakeUserRepository;
 
-            fakeUsers.add(fakeUserDto);
+    @Autowired
+    private FakeUserMapper fakeUserMapper;
+
+    public List<FakeUserDto> getUsers() {
+        List<FakeUser> fakeUsers = fakeUserRepository.findAll();
+
+        List<FakeUserDto> fakeUserDtos = new ArrayList<>();
+        for(FakeUser fakeUser : fakeUsers) {
+            FakeUserDto fakeUserDto = fakeUserMapper.toDto(fakeUser);
+            fakeUserDtos.add(fakeUserDto);
         }
 
-        return fakeUsers;
+        return fakeUserDtos;
+    }
+
+    public void addUsers(List<FakeUserDto> fakeUserDtos) {
+        for(FakeUserDto fakeUserDto: fakeUserDtos) {
+            fakeUserRepository.save(fakeUserMapper.toEntity(fakeUserDto));
+        }
     }
 
 
