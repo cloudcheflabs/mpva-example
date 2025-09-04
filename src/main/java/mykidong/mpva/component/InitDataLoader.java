@@ -1,6 +1,5 @@
 package mykidong.mpva.component;
 
-import mykidong.mpva.controller.FakeUserController;
 import mykidong.mpva.domain.dto.FakeUserDto;
 import mykidong.mpva.service.FakeService;
 import org.slf4j.Logger;
