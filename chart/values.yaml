@@ -1,0 +1,63 @@
+namespace: mpva-example
+image: pdfjst7m.private-ncr.gov-ntruss.com/mpva-example:latest
+imagePullPolicy: Always
+replicas: 2
+resources:
+  requests:
+    cpu: 200m
+    memory: 1Gi
+  limits:
+    cpu: 2000m
+    memory: 5Gi
+priorityClassName: ""
+annotations: {}
+affinity: {}
+tolerations: {}
+nodeSelector: {}
+hostNetwork: false
+hostAliases: {}
+
+# hpa.
+hpa:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 8
+  targetCPUUtilizationPercentage: 50
+
+# spring boot server port.
+server:
+  port : 8080
+
+# spring profile.
+spring:
+  profiles:
+    active: dev
+
+
+# spring boot management server.
+management:
+  server:
+    port: 18081
+
+# readiness probe.
+readiness:
+  initialDelaySeconds: 15
+  periodSeconds: 10
+
+# liveness probe.
+liveness:
+  initialDelaySeconds: 3
+  periodSeconds: 10
+
+# java opts.
+javaOpts: "-Xmx4G"
+
+# ingress.
+ingress:
+  enabled: false
+  ingressClassName: nginx
+  hostName: dev.bohunapt-mpva-public.com
+  path: /mpva-example
+
+# image pull secret.
+imagePullSecret: mpva-reg-cred

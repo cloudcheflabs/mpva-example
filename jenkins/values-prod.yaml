@@ -1,0 +1,58 @@
+# docker image.
+image: prod-registry-to-be-replaced/mpva-example:latest
+
+# replicas.
+replicas: 3
+
+# resources.
+resources:
+  requests:
+    cpu: 400m
+    memory: 2Gi
+  limits:
+    cpu: 2000m
+    memory: 5Gi
+
+# affinity.
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: ncloud.com/nks-nodepool
+              operator: NotIn
+              values:
+                - "ingress-controller"
+            - key: ncloud.com/nks-nodepool
+              operator: NotIn
+              values:
+                - "management"
+            - key: ncloud.com/nks-nodepool
+              operator: In
+              values:
+                - "worker"
+
+# tolerations.
+tolerations: {}
+
+# hpa.
+hpa:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 8
+  targetCPUUtilizationPercentage: 50
+
+# spring profile.
+spring:
+  profiles:
+    active: prod
+
+# java opts.
+javaOpts: "-Xms1G -Xmx4G"
+
+# ingress.
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  hostName: bohunapt-mpva-public.com
+  path: /mpva-example

@@ -1,0 +1,66 @@
+# docker image.
+image: pdfjst7m.private-ncr.gov-ntruss.com/mpva-example:latest
+
+# replicas.
+replicas: 2
+
+# resources.
+resources:
+  requests:
+    cpu: 200m
+    memory: 1Gi
+  limits:
+    cpu: 1000m
+    memory: 5Gi
+
+# affinity.
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: ncloud.com/nks-nodepool
+              operator: NotIn
+              values:
+                - "ingress-controller"
+            - key: ncloud.com/nks-nodepool
+              operator: NotIn
+              values:
+                - "management"
+            - key: ncloud.com/nks-nodepool
+              operator: In
+              values:
+                - "worker"
+
+# tolerations.
+tolerations: {}
+
+# hpa.
+hpa:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 50
+
+# spring profile.
+spring:
+  profiles:
+    active: dev
+
+# java opts.
+javaOpts: "-Xmx4G"
+
+# ingress.
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  hostName: dev.bohunapt-mpva-public.com
+  path: /mpva-example
+
+
+# host alias.
+hostAliases:
+  - ip: "1.1.1.1"
+    hostnames:
+      - "dev.bohunapt-mpva-public.com"
+

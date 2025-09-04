@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.namespace }}
+    component: mpva
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.namespace }}
+      component: mpva
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.namespace }}
+        component: mpva
+      {{- with .Values.annotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.priorityClassName }}
+      priorityClassName: {{ .Values.priorityClassName }}
+      {{- end }}
+      {{- with .Values.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      hostNetwork: {{ .Values.hostNetwork }}
+      serviceAccountName: {{ .Values.namespace }}
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecret }}
+      containers:
+        - name: {{ .Values.namespace }}
+          image: {{ .Values.image }}
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "{{ .Values.spring.profiles.active }}"
+            - name: MPVA_JAVA_OPTS
+              value: "{{ .Values.javaOpts }}"
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          securityContext:
+            privileged: true
+            runAsUser: 0
+          resources: 
+          {{- toYaml $.Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: mpva-conf-volume
+              mountPath: /opt/mpva/conf/application.yml
+              subPath: application.yml
+          ports:
+            - name: rest
+              containerPort: {{ .Values.server.port }}
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: {{ .Values.management.server.port }}
+            initialDelaySeconds: {{ .Values.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readiness.periodSeconds }}
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: {{ .Values.management.server.port }}
+            initialDelaySeconds: {{ .Values.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.liveness.periodSeconds }}
+          lifecycle:
+            preStop:
+              exec:
+                command: [ "sleep", "15" ]
+      volumes:
+        - name: mpva-conf-volume
+          configMap:
+            name: {{ .Values.namespace }}

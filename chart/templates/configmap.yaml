@@ -1,0 +1,99 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.namespace }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.namespace }}
+    component: mpva
+data:
+  application.yml: |
+    ---
+    #####################
+    # profile: common
+    #####################
+    
+    management:
+      endpoint:
+        health:
+          probes:
+            enabled: true
+      health:
+        livenessState:
+          enabled: true
+        readinessState:
+          enabled: true
+        db:
+          enabled: false
+      server:
+        port: {{ .Values.management.server.port }}
+    
+    server:
+      port: {{ .Values.server.port }}
+      servlet:
+        context-path: /mpva-example
+      shutdown: graceful
+      error:
+        include-message: always
+    
+    spring:
+      jpa:
+        open-in-view: false
+    
+    
+    ---
+    #####################
+    # profile: dev
+    #####################
+    
+    # spring
+    spring:
+      profiles: dev
+      datasource:
+        url: jdbc:h2:mem:testdb
+        driver-class-name: org.h2.Driver
+        username: sa
+        password:
+      h2:
+        console:
+          enabled: true
+    
+    
+    # swagger
+    springdoc:
+      swagger-ui:
+        path: /swagger-ui.html
+        enabled: true
+      api-docs:
+        path: /v3/api-docs
+        enabled: true
+    
+    
+    ---
+    #####################
+    # profile: prod
+    #####################
+    
+    # spring
+    spring:
+      profiles: prod
+      datasource:
+        url: jdbc:h2:mem:testdb
+        driver-class-name: org.h2.Driver
+        username: sa
+        password:
+      h2:
+        console:
+          enabled: true
+    
+    
+    # swagger
+    springdoc:
+      api-docs:
+        enabled: false
+      swagger-ui:
+        enabled: false
+    
+    
+      
+        
