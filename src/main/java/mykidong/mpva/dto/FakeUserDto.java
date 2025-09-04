@@ -2,6 +2,7 @@ package mykidong.mpva.dto;
 
 import lombok.Data;
 
+
 @Data
 public class FakeUserDto {
     int id;
