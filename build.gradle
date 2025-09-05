@@ -3,7 +3,18 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.18'
     id 'io.spring.dependency-management' version '1.1.4'
+    id 'com.github.jk1.dependency-license-report' version '2.9'
 }
+
+licenseReport {
+    outputDir = "$buildDir/reports/licenses"
+    renderers = [
+            new com.github.jk1.license.render.JsonReportRenderer(),
+            new com.github.jk1.license.render.InventoryHtmlReportRenderer(),
+            new com.github.jk1.license.render.CsvReportRenderer()
+    ]
+}
+
 
 group = 'mykidong.mpva'
 version = '1.0.0-SNAPSHOT'
