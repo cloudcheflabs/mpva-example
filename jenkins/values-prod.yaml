@@ -28,6 +28,10 @@ affinity:
               values:
                 - "management"
             - key: ncloud.com/nks-nodepool
+              operator: NotIn
+              values:
+                - "ai"
+            - key: ncloud.com/nks-nodepool
               operator: In
               values:
                 - "worker"
@@ -54,5 +58,5 @@ javaOpts: "-Xms1G -Xmx4G"
 ingress:
   enabled: true
   ingressClassName: nginx
-  hostName: bohunapt-mpva-public.com
+  hostName: bohunapt.mpva.go.kr
   path: /mpva-example

@@ -56,7 +56,7 @@ javaOpts: "-Xmx4G"
 ingress:
   enabled: false
   ingressClassName: nginx
-  hostName: dev.bohunapt-mpva-public.com
+  hostName: devbohunapt.mpva.go.kr
   path: /mpva-example
 
 # image pull secret.
