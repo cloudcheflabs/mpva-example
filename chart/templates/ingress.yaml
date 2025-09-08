@@ -16,7 +16,7 @@ spec:
                 port:
                   number: {{ .Values.server.port }}
             path: {{ .Values.ingress.path }}
-            pathType: ImplementationSpecific
+            pathType: Prefix
   tls:
     - hosts:
         - {{ .Values.ingress.hostName }}
