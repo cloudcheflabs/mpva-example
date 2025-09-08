@@ -17,8 +17,4 @@ spec:
                   number: {{ .Values.server.port }}
             path: {{ .Values.ingress.path }}
             pathType: Prefix
-  tls:
-    - hosts:
-        - {{ .Values.ingress.hostName }}
-      secretName: {{ .Values.ingress.hostName }}-tls
 {{- end }}

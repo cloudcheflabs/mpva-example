@@ -89,41 +89,6 @@ pipeline {
                 '
             }
         }
-        stage('create certificate secret for dev') {
-            when {
-                expression { env.INGRESS_ENABLED == "true" && params.ENVIRONMENT == "dev" }
-            }
-            steps {
-                echo 'creating self-signed certificate secret for dev ...'
-                sh ' \
-                cd ${WORKSPACE}/mpva-branches/${BRANCH}/jenkins/cert && \
-                chmod +x ./ssl.sh && \
-                ./ssl.sh ${INGRESS_HOST_NAME} && \
-                kubectl create ns ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f - && \
-                kubectl create secret tls \
-                ${INGRESS_HOST_NAME}-tls \
-                --key ${WORKSPACE}/mpva-branches/${BRANCH}/jenkins/cert/${INGRESS_HOST_NAME}.key \
-                --cert ${WORKSPACE}/mpva-branches/${BRANCH}/jenkins/cert/${INGRESS_HOST_NAME}.crt \
-                -n ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f - \
-                '
-            }
-        }
-        stage('create certificate secret for stg and prod') {
-            when {
-                expression { env.INGRESS_ENABLED == "true" && (params.ENVIRONMENT == "stg" || params.ENVIRONMENT == "prod") }
-            }
-            steps {
-                echo 'creating certificate secret ...'
-                sh ' \
-                kubectl create ns ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f - && \
-                kubectl create secret tls \
-                ${INGRESS_HOST_NAME}-tls \
-                --key ${WORKSPACE}/mpva-branches/${BRANCH}/jenkins/public-cert/key.pem \
-                --cert ${WORKSPACE}/mpva-branches/${BRANCH}/jenkins/public-cert/cert.pem \
-                -n ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f - \
-                '
-            }
-        }
         stage('deploy') {
             steps {
                 echo 'deploying ...'
