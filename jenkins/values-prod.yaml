@@ -19,19 +19,19 @@ affinity:
     requiredDuringSchedulingIgnoredDuringExecution:
       nodeSelectorTerms:
         - matchExpressions:
-            - key: ncloud.com/nks-nodepool
+            - key: nks-nodepool
               operator: NotIn
               values:
                 - "ingress-controller"
-            - key: ncloud.com/nks-nodepool
+            - key: nks-nodepool
               operator: NotIn
               values:
                 - "management"
-            - key: ncloud.com/nks-nodepool
+            - key: nks-nodepool
               operator: NotIn
               values:
                 - "ai"
-            - key: ncloud.com/nks-nodepool
+            - key: nks-nodepool
               operator: In
               values:
                 - "worker"
